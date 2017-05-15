@@ -1204,7 +1204,7 @@ gsaControllers.controller('global', ['$scope', '$http', '$timeout', '$location',
             "method": "GET",
             "url": "https://maps.googleapis.com/maps/api/geocode/json",
             "params": {
-              key: 'AIzaSyBTTp7xol914jf5wv2kLYc2Qpcu0073Nj0',
+              key: 'AIzaSyDwGzFp91_yS2E7Gu5gls0WRfM1BgIjO68',
               address: location,
               components: 'postal_code:10027'
             }
