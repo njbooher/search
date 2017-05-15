@@ -282,7 +282,7 @@ search.directive('cantFind', ['$timeout', '$http', '$location', function ($timeo
               comments: $scope.formData.comments,
               name: $scope.formData.name,
               email: $scope.formData.email,
-              path: "https://search.sites.columbia.edu" + encodeURI($location.path()),
+              path: encodeURI($location.path()),
               "g-recaptcha-response": recaptchaVal
             }
           }).success(function(data) {
@@ -368,7 +368,7 @@ search.directive('feedbackForm', ['$timeout', '$http', '$location', function ($t
               comments: $scope.formData.comments,
               name: $scope.formData.name,
               email: $scope.formData.email,
-              path: "https://search.sites.columbia.edu" + encodeURI($location.path()),
+              path: encodeURI($location.path()),
               "g-recaptcha-response": recaptchaVal
             }
           }).success(function(data) {
@@ -574,8 +574,8 @@ gsaControllers.controller('global', ['$scope', '$http', '$timeout', '$location',
   gsaDefaultClient = 'DoC',
   gsaDefaultSite = 'Directory_of_Classes',
 */
-  var gsaDefaultClient = 'columbia';
-  var gsaDefaultSite = 'Columbia2';
+  var gsaDefaultClient = 'default_frontend';
+  var gsaDefaultSite = 'default_collection';
   var gsaLimit = 10;
   var gmap = {};
   var gmapLookupCache = {};
@@ -929,10 +929,9 @@ gsaControllers.controller('global', ['$scope', '$http', '$timeout', '$location',
     }
 
     var params = {
-      'proxystylesheet': 'json2',
       'client': $scope.gsa.client,
       'site': gsaSite,
-      'output': 'xml_no_dtd',
+      'output': 'xml',
       'getfields': '*',
       'num': gsaLimit,
       'filter': $scope.gsa.filter,
