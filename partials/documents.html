@@ -1,0 +1,64 @@
+<div id="gsa-current-page" class="container" ng-hide="!global.keywordsSubmitted">
+  <cant-find class="hidden-xs"><a href="" class="pull-right" ng-click="toggleForm()" ng-hide="showForm || global.formFinished == 'cantfind'">Can't find what you're looking for?</a></cant-find>
+
+  <div ng-switch on="global.loadedNotEmpty">
+    <div ng-switch-when="1">
+      Showing <span ng-bind="resultsCount"></span> results from <a href="http://cuit.columbia.edu/web-publishing/google-search-appliance" ng-show="gsa.data.results_nav.total_results">Columbia's Google Search Appliance</a>.
+    </div>
+    <div ng-switch-default>
+      Data from <a href="http://cuit.columbia.edu/web-publishing/google-search-appliance">Columbia's Google Search Appliance</a></span>.
+    </div>
+  </div>
+</div>
+
+<div id="gsa-search" ng-hide="!global.keywordsSubmitted">
+
+  <div class="container" ng-show="gsa.data.results_nav">
+
+    <h1 class="sr-only">Search results for "{{ global.keywordsSubmitted }}"</h1>
+
+    <div class="clearfix">
+      <h2 class="sr-only">Documents</h2>
+      <ul id="gsa-search-results" class="documents">
+        <li class="ng-trans ng-trans-flip-x" ng-animate ng-repeat="item in gsa.data.results | filter:gsa.filterWithin">
+          <h3><i class="fa fa-{{ item.type.icon }}" aria-hidden="true"></i><sup class="icon-label" ng-bind="item.type.label"></sup> <a ng-href="{{item.url}}" ng-bind-html="item.title"></a></h3>
+          <div class="url"><a ng-href="{{item.url}}" ng-bind-html="item.url"></a> - {{item.size}}</div>
+          <div class="description" ng-bind-html="item.summary"></div>
+<!--
+          <div class="meta-tags">
+            <dl class="dl-horizontal" ng-repeat="tag in item.meta_tags">
+              <dt ng-bind="tag.name"></dt>
+              <dd ng-bind="tag.value"></dd>
+            </dl>
+          </div>
+-->
+        </li>
+      </ul>
+    </div>
+
+    <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-hide="gsa.data.results" ng-animate>
+      <div class="alert alert-info" role="alert">Sorry, there are no search results for <strong ng-bind="global.keywords"></strong></div>
+    </div>
+
+<!--
+    <nav class="ng-trans ng-trans-fade navbar" ng-show="gsa.data.results_nav.total_results">
+      <div class="col-md-push-1 col-md-10">
+
+        <div class="pager pull-left hidden">
+          <div id="gsa-filter-within-wrapper" class="ng-trans ng-trans-fade-up" ng-show="gsa.data.results" ng-animate>
+            <div class="input-group">
+              <div class="input-group-addon">Filter within</div>
+              <input ng-model="gsa.filterWithin" ng-model-options="{debounce: 200}" id="gsa-filter-within" type="text" class="form-control" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </nav>
+-->
+    <uib-pagination total-items="gsa.data.results_nav.total_results" ng-model="gsa.paginationPage" ng-change="pageChange()" max-size="10" class="pagination-md" items-per-page="10" ng-if="gsa.data.results_nav.total_results > 10"></uib-pagination>
+
+
+  </div>
+
+</div><!-- /#gsa-search -->

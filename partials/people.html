@@ -1,0 +1,101 @@
+<div id="gsa-current-page" class="container" ng-hide="!global.keywordsSubmitted">
+  <div class="pull-right-desktop">
+    <a href="https://directory.columbia.edu/people/pub/help/update_information.html">Update and manage your personal information</a>
+  </div>
+
+  <div ng-switch on="people.length || 'null'">
+    <div ng-switch-when="null">
+      Data from <a href="https://directory.columbia.edu">People Directory</a></span>.
+    </div>
+    <div ng-switch-default>
+      Showing <span ng-bind="people.length"></span> result<span ng-show="people.length > 1 || !people.length">s</span> from <a href="https://directory.columbia.edu">People Directory</a>.
+    </div>
+  </div>
+</div>
+
+<div id="gsa-search" ng-hide="!global.keywordsSubmitted">
+
+  <div class="container">
+
+    <h1 class="sr-only">Search results for "{{ global.keywordsSubmitted }}"</h1>
+
+    <div class="clearfix">
+      <h2 class="sr-only">People Results</h2>
+      <ul id="gsa-search-results" class="people">
+        <li class="ng-trans ng-trans-flip-x" ng-animate ng-repeat="item in people track by item.uni">
+          <h3><span ng-bind="item.cn"></span></h3>
+
+<!--
+          <pre ng-bind="people | json"></pre>
+-->
+          <div class="person-details">
+            <dl ng-if="item.title || item.ou">
+              <span ng-if="item.title">
+                <dt>Title</dt>
+                <dd ng-bind="item.title"></dd>
+              </span>
+              <span ng-if="item.ou">
+                <dt>Department</dt>
+                <dd>
+                  <div ng-bind="item.ou"></div>
+                </dd>
+              </span>
+            </dl>
+
+            <dl ng-if="item.postaladdress">
+              <dt>Address</dt>
+              <dd><span ng-bind-html="item.postaladdress"></span></dd>
+            </dl>
+  
+            <dl ng-if="item['title;x-role-2'] || item['ou;x-role-2']">
+              <span ng-repeat="i in [2, 3, 4, 5]" ng-init="title = 'title;x-role-' + i; dept = 'ou;x-role-' + i">
+                <span ng-if="item[title]">
+                  <dt>Title</dt>
+                  <dd ng-bind="item[title]"></dd>
+                </span>
+                <span ng-if="item[dept]">
+                  <dt>Department</dt>
+                  <dd>
+                    <div ng-bind="item[dept]"></div>
+                  </dd>
+                </span>
+              </span>
+            </dl>
+  
+            <dl ng-if="item.telephonenumber">
+              <dt>Phone</dt>
+              <dd><i class="fa fa-phone" aria-hidden="true"></i> <a ng-href="tel:{{item.telephonenumber}}" ng-bind="item.telephonenumber"></a></dd>
+            </dl>
+
+            <dl ng-if="item.facsimiletelephonenumber">
+              <dt>Fax</dt>
+              <dd><i class="fa fa-fax" aria-hidden="true"></i> <a ng-href="tel:{{item.facsimiletelephonenumber}}" ng-bind="item.facsimiletelephonenumber"></a></dd>
+            </dl>
+
+
+            <dl ng-if="item.mail">
+              <dt>E-mail</dt>
+              <dd><i class="fa fa-envelope" aria-hidden="true"></i> <a ng-href="mailto:{{item.mail}}" ng-bind="item.mail"></a></dd>
+            </dl>
+
+            <dl ng-if="item.uni">
+              <dt>Columbia UNI</dt>
+              <dd ng-bind="item.uni"></dd>
+            </dl>
+          </div>
+        </li>
+      </ul>
+
+      <a class="show-more-btn btn btn-lg btn-primary btn-block" ng-if="people.length == 50" href="https://directory.columbia.edu/people/search?filter.searchTerm={{ global.keywordsSubmitted }}">More from the Columbia University Directory</a>
+
+
+    </div>
+
+    <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-hide="people" ng-switch on="global.keywordsSubmitted || 'null'" ng-animate>
+      <div class="alert alert-info" role="alert" ng-switch-when="null">Sorry, there are no results to display.</div>
+      <div class="alert alert-info" role="alert" ng-switch-default>Sorry, there are no search results for <strong ng-bind="global.keywordsSubmitted"></strong></div>
+    </div>
+
+  </div>
+
+</div><!-- /#gsa-search -->

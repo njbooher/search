@@ -1,0 +1,70 @@
+<div id="gsa-current-page" class="container">
+  <div ng-switch on="publications.length || 'null'">
+    <div ng-switch-when="null">
+      Data from <a ng-href="http://academiccommons.columbia.edu/catalog?q={{global.keywordsSubmitted}}">Academic Commons</a><span class="hidden-xs"> and <a href="https://directory.columbia.edu">People Directory</a></span>.
+    </div>
+    <div ng-switch-default>
+      Showing <span ng-bind="publications.length"></span> results from <a ng-href="http://academiccommons.columbia.edu/catalog?q={{global.keywordsSubmitted}}">Academic Commons</a><span ng-show="peopleFiltered.length" class="hidden-xs"> and <a href="https://directory.columbia.edu">People Directory</a></span>.
+    </div>
+  </div>
+</div>
+
+<div id="gsa-search" ng-class="(uniFilterActive) ? 'with-uni-filter' : ''">
+
+  <div class="container">
+
+    <h1 class="sr-only">Publications from Academic Commons</h1>
+    
+    <div class="row clearfix">
+      <h2 class="sr-only">List of Publications</h2>
+
+      <ul id="gsa-search-results" class="publications" ng-class="(people) ? 'col-sm-7' : 'col-md-8'">
+        <li class="ng-trans ng-trans-flip-x" ng-class="{'focused': (itemFocus[$index])}" ng-animate ng-repeat="item in publications track by item.link" ng-switch on="(itemFocus[$index]) || 'null'"><div class="inner">
+          <h3 class="title"><a ng-href="{{item.guid}}" ng-bind-html="item.title"></a></h3>
+          <div class="creator"><span ng-bind-html="item.creator"></span></div>
+          <div>
+            <span ng-bind="item.content_type"></span> - 
+            <span class="date" ng-bind="item.date"></span>
+            <a href="" ng-switch-when="null" class="read-more ng-trans ng-trans-fade-down" ng-click="setItemFocus($index)"><span class="glyphicon glyphicon-plus"></span> Abstract</a>
+          </div>
+          <div ng-switch-default class="ng-trans ng-trans-fade-down">
+            <div class="department-subject"><strong class="department" ng-bind-html="item.department"></strong> - <span class="subject" ng-bind-html="item.subject"></span> </div>
+            <div class="description" ng-bind-html="item.description"></div>
+            <div class="url"><a ng-href="{{item.guid}}" ng-bind-html="item.guid"></a></div>
+
+            <a href="" class="read-less" ng-click="setItemFocus($index)"><span class="glyphicon glyphicon-minus"></span> Hide</a>
+          </div>
+        </div></li>
+
+        <a class="show-more-btn btn btn-lg btn-primary btn-block" ng-if="publications.length == 50" href="http://academiccommons.columbia.edu/catalog?q={{ global.keywordsSubmitted }}">More from Academic Commons</a>
+
+      </ul>
+
+
+      <div id="gsa-search-people" class="hidden-xs col-sm-push-1 col-sm-4" ng-if="people" ng-hide="!peopleFiltered.length">
+        <h2>Authors from Directory</h2>
+        <div class="inner">
+          <div ng-repeat="item in peopleFiltered" class="item ng-trans ng-trans-fade-up" ng-animate>
+            <h3><a ng-href="/people/{{item.uni}}" ng-bind="item.cn"></a></h3>
+  
+            <div ng-bind="item.title"></div>
+            <div ng-if="item.mail">
+              <i class="fa fa-envelope" aria-hidden="true"></i> <a ng-href="mailto:{{item.mail}}" ng-bind="item.mail"></a>
+            </div>
+            <div ng-if="item.telephonenumber">
+              <i class="fa fa-phone" aria-hidden="true"></i> <a ng-href="tel:{{item.telephonenumber}}" ng-bind="item.telephonenumber"></a>
+            </div>
+            <div><i class="fa fa-search" aria-hidden="true"></i> <a href="/publications/person/{{item.uni}}">{{item.givenname}}'s publications</a></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-show="noResults" ng-animate>
+      <div class="alert alert-info" role="alert">Sorry, there are no publication matching <strong ng-bind="global.keywords"></strong>.</div>
+    </div>
+
+  </div>
+
+</div><!-- /#gsa-search -->

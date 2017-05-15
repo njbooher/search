@@ -1,0 +1,109 @@
+<div id="gsa-current-page" class="container" ng-hide="!global.keywordsSubmitted">
+  <cant-find class="hidden-xs"><a href="" class="pull-right" ng-click="toggleForm()" ng-hide="showForm || global.formFinished == 'cantfind'">Can't find what you're looking for?</a></cant-find>
+<!--
+  <div class="pull-right-desktop">
+    <a href="https://columbiauniversity.qualtrics.com/SE/?SID=SV_4Z8kG4P7CHIGskJ">Please take our 5-min survey on the University homepage.</a>
+  </div>
+-->
+
+  <div ng-switch on="global.loadedNotEmpty">
+    <div ng-switch-when="1">
+      Showing <span ng-bind="resultsCount"></span> results from <a href="http://cuit.columbia.edu/web-publishing/google-search-appliance" ng-show="gsa.data.results_nav.total_results">Columbia's Google Search Appliance</a><span ng-show="people" class="hidden-xs"><span ng-show="gsa.data.results_nav.total_results"> and</span> <a href="https://directory.columbia.edu">People Directory</a></span>.
+    </div>
+    <div ng-switch-default>
+      Data from <a href="http://cuit.columbia.edu/web-publishing/google-search-appliance">Columbia's Google Search Appliance</a><span class="hidden-xs"> and <a href="https://directory.columbia.edu">People Directory</a></span>.
+    </div>
+  </div>
+  <div id="gsa-spelling" ng-if="gsa.data.spelling" class="ng-trans ng-trans-fade-down">
+    Did you mean:
+    <a ng-href="/pages/{{item | htmlToPlaintext}}" ng-repeat="item in gsa.data.spelling" ng-bind-html="item | htmlToPlaintext"></a>
+  </div>
+</div>
+
+<div id="gsa-search" ng-class="(gsa.instant) ? 'instant-results' : ''" ng-hide="!global.keywordsSubmitted">
+  <div class="container" ng-show="gsa.data.results_nav || people">
+
+    <h1 class="sr-only">Search results for "{{ global.keywordsSubmitted }}"</h1>
+
+    <div class="clearfix row" ng-show="gsa.data.results_nav.total_results || people">
+
+      <div id="gsa-search-results-container" ng-class="(people) ? 'col-sm-8 col-md-8' : 'col-sm-11 col-md-10'">
+
+        <h2 class="sr-only">Web Results</h2>
+
+        <ul class="media-list ng-trans ng-trans-fade" id="gsa-search-keymatches" ng-if="gsa.data.keymatch && !gsa.data.results_nav.have_prev">
+          <li class="row" ng-repeat="item in gsa.data.keymatch" ng-init="item.imageMissing = 1">
+            <div class="peek-thumbnail col-sm-2 hidden-xs" ng-if="breakpoint.class != 'mobile'" ng-show="!item.imageMissing">
+              <a ng-href="{{::item.url}}"><img class="img-responsive img-rounded" ng-src="/pagepeeker.php?size=m&url={{::item.url}}" onload="angular.element(this).scope().item.imageMissing = 0" alt="screenshot of {{ ::item.title }}"></a>
+            </div>
+            <div class="col-sm-10">
+              <h3><a ng-href="{{::item.url}}" ng-bind-html="::item.title"></a></h3>
+              <div class="url"><a ng-href="{{::item.url}}" ng-bind-html="::item.url"></a></div>
+            </div>
+          </li>
+        </ul>
+
+        <ul class="media-list" id="gsa-search-results">
+
+          <li class="row ng-trans ng-trans-flip-x" ng-repeat="item in gsa.data.results" ng-init="item.imageMissing = 1">
+            <div ng-class="(gsa.number($index) < 11 && !item.imageMissing) ? 'col-md-9' : 'col-md-11'">
+              <h3><span class="search-number" ng-bind="gsa.number($index)"></span>. <a ng-href="{{::item.url}}" ng-bind-html="::item.title"></a></h3>
+              <div class="description" ng-bind-html="::item.summary"></div>
+              <div class="url"><a ng-href="{{::item.url}}" ng-bind-html="::item.url"></a></div>
+            </div>
+            <div class="peek-thumbnail col-md-3 hidden-xs hidden-sm" ng-if="breakpoint.class != 'mobile' && gsa.number($index) < 11" ng-show="!item.imageMissing">
+              <a ng-href="{{::item.url}}"><img class="img-responsive img-rounded" ng-src="/pagepeeker.php?size=m&url={{::item.url}}" onload="angular.element(this).scope().item.imageMissing = 0" alt="screenshot of {{ ::item.title }}"></a>
+            </div>
+          </li>
+        </ul>
+
+        <div id="gsa-search-empty" class="spinner ng-trans ng-trans-fade-up" ng-if="!global.loaded && !gsa.data.results && !gsa.instant">
+          <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>
+        </div>
+        <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-if="global.loaded && !gsa.data.results">
+          <div class="alert alert-info" role="alert">There are no web results for <strong ng-bind="global.keywordsSubmitted"></strong>, however {{ (people.length == 1) ? 'a person was matched' : 'people were matched' }}.</div>
+        </div>
+  
+        <div id="gsa-search-clusters" ng-show="gsa.cluster[0].clusters && !gsa.data.results_nav.have_prev && global.loaded && !gsa.instant">
+          <div class="panel-heading">
+            <h4 class="panel-title">Searches related to "{{gsa.data.query}}"</h4>
+          </div>
+          <div class="panel-body">
+            <div ng-repeat="item in gsa.cluster[0].clusters">
+              <a ng-href="/pages/{{::item.label}}"><span ng-bind="::item.label"></span></a>
+            </div>
+          </div>
+
+        </div>
+
+        <uib-pagination total-items="gsa.data.results_nav.total_results" ng-model="gsa.paginationPage" ng-change="pageChange()" max-size="10" class="pagination-md" items-per-page="10" ng-if="gsa.data.results_nav.total_results > 10"></uib-pagination>
+
+      </div>
+
+      <div id="gsa-search-people" class="hidden-xs col-sm-4 col-md-4" ng-if="people">
+        <h2><a ng-href="/people/{{global.keywordsSubmitted}}">People <span class="badge">{{ people.length }}{{ (people.length == 50) ? '+' : '' }}</span></a></h2>
+        <div class="inner">
+          <div ng-repeat="item in people track by item.uni" class="item ng-trans ng-trans-fade-up">
+            <h3><a ng-href="/people/{{::item.uni}}" ng-bind="::item.cn"></a></h3>
+  
+            <div ng-bind="::item.title"></div>
+            <div ng-if="::item.mail">
+              <i class="fa fa-envelope" aria-hidden="true"></i> <a ng-href="mailto:{{::item.mail}}" ng-bind="::item.mail"></a>
+            </div>
+            <div ng-if="::item.telephonenumber">
+              <i class="fa fa-phone" aria-hidden="true"></i> <a ng-href="tel:{{::item.telephonenumber}}" ng-bind="::item.telephonenumber"></a>
+            </div>
+          </div>
+        </div>
+        <div class="footnote"><a href="https://directory.columbia.edu/people/pub/help/update_information.html">Update and manage your personal information</a></div>
+      </div>
+
+    </div>
+
+    <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-if="global.loaded" ng-hide="gsa.data.results || gsa.instant || people.length">
+      <div class="alert alert-info" role="alert">Sorry, there are no search results for <strong ng-bind="global.keywordsSubmitted"></strong>.</div>
+    </div>
+
+  </div>
+
+</div><!-- /#gsa-search -->

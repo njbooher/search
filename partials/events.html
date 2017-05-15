@@ -1,0 +1,108 @@
+<div id="gsa-current-page" class="container">
+  <div ng-switch on="global.loadedNotEmpty">
+    <div ng-switch-when="1">
+      Showing <span ng-bind="events.filteredEvents.length"></span> event result<span ng-show="events.filteredEvents.length > 1">s</span> from <a href="https://events.columbia.edu">Columbia University Events</a>.
+    </div>
+    <div ng-switch-default>
+      Data from <a href="https://events.columbia.edu">Columbia University Events</a>.
+    </div>
+  </div>
+</div>
+
+<div id="gsa-search">
+  <div class="container">
+
+    <h1 class="sr-only">Columbia University Events</h1>
+
+    <div class="row">
+      <div class="col-md-9 clearfix">
+        <ul id="gsa-search-results" class="events" ng-show="events.filteredEvents">
+          <li id="::item.guid + item.recurrenceId" class="row ng-trans ng-trans-fade-down" ng-animate ng-repeat="item in events.filteredEvents | dateFilter:date | limitTo:events.limit as renderedEvents track by item.guid + item.recurrenceId">
+            <div class="date-wrapper col-xs-3 col-sm-2 text-center" ng-switch on="::item.end.longdate != item.start.longdate">
+              <div class="date-range-wrapper" ng-switch-when="true">
+                <div class="date" ng-bind-html="::renderDate(item.start.longdate)"></div>
+                <div class="date-range-label">to</div>
+                <div class="date" ng-bind-html="::renderDate(item.end.longdate)"></div>
+              </div>
+              <div ng-switch-default>
+                <div class="date" ng-bind-html="::renderDate(item.start.longdate)"></div>
+              </div>
+            </div>
+            <div class="col-xs-9 col-sm-10">
+              <h2><a ng-href="{{::item.eventlink}}"><span ng-bind-html="::item.summary"></span></a></h2>
+  
+              <div class="time-and-location clearfix">
+                <div class="col-sm-6" ng-if="::item.formattedDate">
+                  <div class="clearfix visible-xs-block"></div>
+                  <span class="ss-icon ss-clock pull-left"></span>
+                  <div class="data">
+                    <strong><span ng-bind="::item.start.time"></span> - <span ng-bind="::item.end.time"></span></strong>
+                    <div ng-bind-html="renderRelativeDate(item)"></div>
+                  </div>
+                </div>
+                <div class="col-sm-6 location-data" ng-if="::item.location.address || item.xproperties[1]['X-BEDEWORK-LOCATION'].values.text">
+                  <div class="clearfix visible-xs-block"></div>
+                  <span class="ss-icon ss-location pull-left"></span>
+                  <div class="data" ng-switch on="item.geocode || 'null'">
+                    <div ng-switch-when="null"><strong ng-bind="::item.location.address"></strong></div>
+                    <div ng-switch-default>
+                      <a href="" data-popover-image="https://maps.googleapis.com/maps/api/staticmap?markers=color:blue|{{item.geocode}}&scale=1&size=276x276&maptype=roadmap&visible=40.808191,%20-73.961847"><strong ng-bind="::item.location.address"></strong></a>
+                    </div>
+
+                    <div><strong ng-bind="::item.xproperties[1]['X-BEDEWORK-LOCATION'].values.text"></strong></div>
+
+                  </div>
+                </div>
+              </div>
+  
+  
+              <div class="event-details">
+    
+                <p class="description" ng-bind-html="::item.description"></p>
+
+                <div class="event-extras" ng-if="::item.xproperties[2]['X-BEDEWORK-CONTACT'].values.text"><a ng-href="mailto:{{::item.xproperties[2]['X-BEDEWORK-CONTACT'].values.text}}"><i class="fa fa-envelope" aria-hidden="true"></i> <span ng-bind="::item.xproperties[2]['X-BEDEWORK-CONTACT'].values.text"></span></a></div>
+                
+                <div class="event-links">
+                  <a ng-href="{{::item.xproperties[0]['X-BEDEWORK-SUNDIAL-RSVP-URL'].values.text}}" class="btn btn-primary" ng-if="::item.xproperties[0]['X-BEDEWORK-SUNDIAL-RSVP-URL'].values.text"><span class="ss-icon ss-check"></span> Register for this Event</a>                  
+                  <a ng-href="{{::item.eventlink}}" class="btn btn-default"><span class="ss-icon ss-addcalendar"></span> Add to Calendar</a>                  
+                </div>
+  
+  
+  <!--
+                <div class="event-categories">
+                  <a ng-repeat="tag in ::item.categories" ng-href="/events/{{::tag | eventsTag}}" class="btn btn-default btn-sm" ng-class="(global.keywords == (tag | eventsTag)) ? 'active' : ''" role="button" ng-bind="::tag | eventsTag"></a>
+                </div>
+  -->
+  
+              </div>
+            </div>
+  
+          </li>
+        </ul>
+        
+        <a class="show-more-btn btn btn-lg btn-primary btn-block" ng-if="events.total > renderedEvents.length && !date" href="" ng-click="events.more()">Show more events</a>
+  
+        <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-hide="global.loaded" ng-animate>
+          <p class="lead">Events data is loading...</p>
+        </div>
+    
+        <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-if="global.loaded" ng-hide="global.loadedNotEmpty" ng-animate>
+          <div class="alert alert-info" role="alert">Sorry, there are no events matching <strong ng-bind="global.keywords"></strong>.</div>
+        </div>
+
+        <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-if="global.loadedNotEmpty && !renderedEvents.length" ng-animate>
+          <div class="alert alert-info" role="alert">No events for the selected date.</div>
+        </div>
+
+        
+      </div>
+      
+      <div class="col-md-3 hidden-xs hidden-sm" aria-hidden="true">
+        <div id="datepicker" ng-model="date" class="clearfix" pickadate no-extra-rows min-date="minDate" max-date="maxDate" format="mm/dd/yyyy" week-starts-on="1"></div>
+        <a id="datepicker-reset" href="" class="btn btn-block btn-primary ng-trans ng-trans-fade-down" ng-show="date" ng-click="dateReset()">Show all dates</a>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /#gsa-search -->

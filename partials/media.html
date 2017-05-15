@@ -1,0 +1,86 @@
+<div id="gsa-current-page" class="container">
+  <div ng-switch on="global.loadedNotEmpty">
+    <div ng-switch-when="1">
+      Showing <span ng-bind="resultsCount"></span> results from <a href="http://cuit.columbia.edu/web-publishing/google-search-appliance" ng-show="gsa.data.results_nav.total_results">Google Search Appliance</a>.
+    </div>
+    <div ng-switch-default>
+      Data from <a href="http://cuit.columbia.edu/web-publishing/google-search-appliance">Google Search Appliance</a></span>.
+    </div>
+  </div>
+</div>
+
+<div id="gsa-search">
+
+  <div id="image-carousel" class="carousel slide ng-trans ng-trans-scale-up" ng-animate ng-if="selected != -1">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#image-carousel" data-slide-to="{{ $index }}" ng-class="(!$index) ? 'active' : ''" ng-click="mediaUpdate($index)" ng-repeat="item in gsa.data.results"></li>
+    </ol>
+  
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+      <div class="item" ng-class="(!$index) ? 'active' : ''" ng-repeat="item in gsa.data.results">
+        <img ng-src="{{item.url}}" alt="{{item.url | filename}}">
+        <div class="carousel-caption">
+          <div class="website"><strong>{{item.url | website}}</strong>: <a href="{{item.url}}" download="download.jpg">{{item.url | filename}} <span class="glyphicon glyphicon-circle-arrow-down"></span></a></div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Controls -->
+    <a class="left carousel-control" href="" data-target="#image-carousel" role="button" data-slide="prev" ng-click="mediaUpdate('prev')">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="" data-target="#image-carousel" role="button" data-slide="next" ng-click="mediaUpdate('next')">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+
+
+  <div class="container" ng-show="gsa.data.results_nav">
+
+    <div class="clearfix">
+      <div id="gsa-search-results" class="media-search row">
+        <div class="image-item ng-trans ng-trans-scale-down" ng-animate ng-repeat="item in gsa.data.results" ng-class="(selected == $index) ? 'selected' : ''">
+          <a href="" ng-click="mediaSelect($index)">
+            <span class="overlay">
+              <span class="text"><span class="website">{{item.url | website}}</span><span class="url">{{item.url | filename}}</span><span class="size">{{item.size}}</span></span>
+            </span>
+            <span class="img" ng-style="{'background-image': 'url(\'{{item.url}}\')'}">
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div id="gsa-search-empty" class="ng-trans ng-trans-fade-up" ng-hide="gsa.data.results" ng-animate>
+      <div class="alert alert-info" role="alert">Sorry, there are no search results for <strong ng-bind="global.keywords"></strong></div>
+    </div>
+
+    <nav class="ng-trans ng-trans-fade navbar" ng-show="gsa.data.results_nav.total_results">
+      <div class="col-md-push-1 col-md-10">
+
+        <div class="pager pull-left hidden">
+          <div id="gsa-filter-within-wrapper" class="ng-trans ng-trans-fade-up" ng-show="gsa.data.results" ng-animate>
+            <div class="input-group">
+              <div class="input-group-addon">Filter within</div>
+              <input ng-model="gsa.filterWithin" ng-model-options="{debounce: 200}" id="gsa-filter-within" type="text" class="form-control" />
+            </div>
+          </div>
+        </div>
+
+        <ul class="pager">
+          <li ng-class="(gsa.data.results_nav.have_prev) ? '' : 'disabled'"><a href="" ng-click="gsa.previous()"><span class="glyphicon glyphicon-menu-left"></span> Previous</a></li>  
+          <li ng-class="(gsa.data.results_nav.have_next) ? '' : 'disabled'"><a href="" ng-click="gsa.next()">Next <span class="glyphicon glyphicon-menu-right"></span></a></li>
+        </ul>
+      </div>
+    </nav>
+
+  </div>
+
+</div><!-- /#gsa-search -->

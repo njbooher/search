@@ -1,0 +1,66 @@
+<div class="feedback-form-toggle" ng-transclude></div>
+
+<div class="angular-animate ng-trans ng-trans-fade-down alert alert-success" role="alert" ng-if="global.formFinished == 'feedback'"><strong>Thank you</strong> for sharing your feedback and helping us work towards a better Columbia.edu.</div>
+
+<div class="angular-animate ng-trans ng-trans-fade-down" ng-if="showForm">
+  <div class="well well-lg">
+    <button type="button" class="close pull-right" aria-label="Close" ng-click="toggleForm()"><span aria-hidden="true">&times;</span></button>
+
+    <h2>Let us know what you think.</h2>
+
+    <form id="feedbackform" ng-submit="submit($event)" name="form" novalidate>
+<!--
+      <div class="row">
+        <div class="col-sm-12">
+          <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 1
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 3
+          </label>
+        </div>
+      </div>
+-->
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group" ng-class="{'has-error': (form.comments.$error.required && form.comments.$touched)}">
+            <label class="control-label" for="comments">Please tell us anything you'd like to share</label>
+            <textarea class="form-control" ng-model="formData.comments" name="comments" id="comments" placeholder="How would you rate your overall experience with the new Columbia Search? Did you find what you were looking for? What features would you like to see?" required></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label class="control-label" for="name">Your name</label>
+            <input type="text" class="form-control" ng-model="formData.name" name="name" placeholder="(optional)" id="name" />
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label class="control-label" for="email">Your email address</label>
+            <input type="email" class="form-control" ng-model="formData.email" placeholder="(optional, if you wish to be contacted)" name="email" id="email" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="g-recaptcha" vc-recaptcha key="global.recaptchaKey"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <button id="form-submit" type="submit" class="btn btn-primary btn-lg" data-loading-text="Please wait..." data-error-text="Please add the missing information." data-post-text="There was an error with your submission, please check your information and try again." data-success-text="Thank you for your feedback.">Submit Feedback</button>
+          <a href="" ng-click="toggleForm()" class="btn btn-link btn-lg">Close</a>
+        </div>
+      </div>
+  
+    </form>
+    
+  </div>
+</div>

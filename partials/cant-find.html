@@ -1,0 +1,76 @@
+<div class="cant-find-toggle" ng-transclude></div>
+
+<div class="angular-animate ng-trans ng-trans-fade-down alert alert-success" role="alert" ng-if="global.formFinished == 'cantfind'"><strong>Thank you</strong> for your feedback and helping us provide a better Columbia.edu.</div>
+
+<div class="angular-animate ng-trans ng-trans-fade-down" ng-if="showForm">
+  <div class="well well-lg">
+    <button type="button" class="close pull-right" aria-label="Close" ng-click="toggleForm()"><span aria-hidden="true">&times;</span></button>
+
+    <h2>Can't find what you're looking for?</h2>
+
+    <form id="cantfindform" ng-submit="submit($event)" name="form" novalidate>
+      <fieldset>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group with-validation" ng-class="{'has-error': (form.looking.$error.required && form.looking.$touched), 'has-success': (!form.looking.$error.required && form.looking.$touched)}">
+              <label class="control-label" for="looking">What were you looking for?</label>
+              <input type="text" class="form-control" ng-model="formData.looking" name="looking" id="looking" required />
+              <div class="error">
+                <div class="angular-animate ng-trans ng-trans-fade-up" ng-if="form.looking.$error.required && form.looking.$touched">
+                  Please provide a name or brief description of what you could not find.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label" for="link">Please provide the correct link</label>
+              <input type="text" class="form-control" ng-model="formData.link" placeholder="(optional)" name="link" id="link" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label" for="comments">Other comments</label>
+              <textarea class="form-control" ng-model="formData.comments" name="comments" id="comments" placeholder="(optional)"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label" for="name">Your name</label>
+              <input type="text" class="form-control" ng-model="formData.name" name="name" placeholder="(optional)" id="name" />
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group with-validation" ng-class="{'has-error': (form.email.$error.email && form.email.$touched)}">
+              <label class="control-label" for="email">Your email address</label>
+              <input type="email" class="form-control" ng-model="formData.email" placeholder="(optional, if you wish to be contacted)" name="email" id="email" />
+              <div class="error">
+                <div class="angular-animate ng-trans ng-trans-fade-up" ng-if="form.email.$error.email && form.email.$touched">
+                  Please provide a valid email address, so we may contact you if needed.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="g-recaptcha" vc-recaptcha key="global.recaptchaKey"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <button id="form-submit" type="submit" class="btn btn-primary btn-lg" data-loading-text="Please wait..." data-error-text="Please add the missing information." data-post-text="There was an error with your submission, please check your information and try again." data-success-text="Thank you for your feedback.">Submit Feedback</button>
+            <a href="" ng-click="toggleForm()" class="btn btn-link btn-lg">Close</a>
+          </div>
+        </div>
+      </fieldset>
+  
+    </form>
+    
+  </div>
+</div>
