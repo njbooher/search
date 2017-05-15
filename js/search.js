@@ -75,11 +75,6 @@ angular.module('exceptionOverride', []).factory('$exceptionHandler', function() 
   return function(exception, cause) {
     exception.message += ' (caused by "' + cause + '")';
 
-    ga('send', 'exception', {
-      'exDescription': exception.message,
-      'exFatal': false
-    });
-
     throw exception;
   };
 });
@@ -227,8 +222,6 @@ search.directive('popoverImage', function () {
         html: true,
         content: '<img class="img-rounded" width="276" height="276" alt="" src="' + scope.image + '">',
         placement: 'auto right'
-      }).on("shown.bs.popover", function() {
-        ga('send', 'event', "Map popover shown", scope.image);
       });
     }
   };
@@ -254,7 +247,6 @@ search.directive('cantFind', ['$timeout', '$http', '$location', function ($timeo
         $scope.showForm = !$scope.showForm;
         if ($scope.showForm) {
           $scope.global.cancelFixedFooter = 1;
-          ga('send', 'event', "Can't Find form", 'Form shown');
         }
         else {
           $scope.global.cancelFixedFooter = 0;
@@ -291,8 +283,6 @@ search.directive('cantFind', ['$timeout', '$http', '$location', function ($timeo
               $timeout(function() {
                 $("#form-submit").button('success').removeClass('btn-danger btn-primary').addClass('btn-success');
               }, 0);
-
-              ga('send', 'event', "Can't Find form", 'Form submitted successfully');
 
               $scope.toggleForm();
               $scope.global.formFinished = 'cantfind';
@@ -342,7 +332,6 @@ search.directive('feedbackForm', ['$timeout', '$http', '$location', function ($t
         if ($scope.showForm) {
           $scope.global.cancelFixedFooter = 1;
 
-          ga('send', 'event', "Feedback form", 'Form shown');
         }
         else {
           $scope.global.cancelFixedFooter = 0;
@@ -377,8 +366,6 @@ search.directive('feedbackForm', ['$timeout', '$http', '$location', function ($t
               $timeout(function() {
                 $("#form-submit").button('success').removeClass('btn-danger btn-primary').addClass('btn-success');
               }, 0);
-
-              ga('send', 'event', "Feedback form", 'Form submitted successfully');
 
               $scope.toggleForm();
               $scope.global.formFinished = 'feedback';
@@ -1513,12 +1500,6 @@ gsaControllers.controller('landing', ['$scope', '$http', '$timeout', '$location'
   $scope.global.path = $location.path();
   $scope.global.pageTitle = $scope.global.pageTitleDefault;
 
-  /* track page on Analytics */
-  ga('send', 'pageview', {
-    'page': $scope.global.path,
-    'title': 'Search Home'
-  });
-
 //  $scope.gsa.initMap();
   
   $scope.gsa.lastParams = {};
@@ -1547,20 +1528,9 @@ gsaControllers.controller('gsaPages', ['$scope', '$routeParams', '$http', '$time
 
     $scope.global.keywordsSubmitted = $scope.global.keywords;
 
-    /* track page on Analytics */
-    ga('send', 'pageview', {
-      'page': $scope.global.path + '?q=' + $scope.global.keywords + '&type=pages',
-      'title': 'Pages - ' + $scope.global.keywords + ' (page ' + $scope.gsa.paginationPage + ')'
-    });
-
     _gsaSearchQuery(params);
   }
   else {
-    /* track page on Analytics */
-    ga('send', 'pageview', {
-      'page': $scope.global.path + '?q=' + $scope.global.keywords + '&type=pages',
-      'title': 'Pages - ' + $scope.global.keywords
-    });
 
     $scope.gsa.searchQuery();
   }
@@ -1594,20 +1564,9 @@ gsaControllers.controller('gsaDocuments', ['$scope', '$routeParams', '$http', '$
 
     $scope.global.keywordsSubmitted = $scope.global.keywords;
 
-    /* track page on Analytics */
-    ga('send', 'pageview', {
-      'page': $scope.global.path + '?q=' + $scope.global.keywords + '&type=documents',
-      'title': 'Documents - ' + $scope.global.keywords + ' (page ' + $scope.gsa.paginationPage + ')'
-    });
-
     _gsaSearchQuery(params);
   }
   else {
-    /* track page on Analytics */
-    ga('send', 'pageview', {
-      'page': $scope.global.path + '?q=' + $scope.global.keywords + '&type=documents',
-      'title': 'Documents - ' + $scope.global.keywords
-    });
 
     $scope.gsa.searchQuery();
   }
@@ -1632,11 +1591,6 @@ gsaControllers.controller('gsaMedia', ['$scope', '$routeParams', '$http', '$time
 
   $scope.global.initSearch();
 
-  /* track page on Analytics */
-  ga('send', 'pageview', {
-    'page': $scope.global.path + '?q=' + $scope.global.keywords + '&type=media',
-    'title': 'Media - ' + $scope.global.keywords
-  });
 
   $scope.gsa.searchQuery();
 
@@ -1705,12 +1659,6 @@ gsaControllers.controller('people', ['$scope', '$routeParams', '$http', '$timeou
 
   $scope.global.initSearch();
 
-  /* track page on Analytics */
-  ga('send', 'pageview', {
-    'page': $scope.global.path + '?q=' + $scope.global.keywords + '&type=people',
-    'title': 'People - ' + $scope.global.keywords
-  });
-
   $scope.gsa.searchPeopleQuery();
 }]);
 
@@ -1728,20 +1676,10 @@ gsaControllers.controller('publications', ['$scope', '$routeParams', '$http', '$
   if ($scope.global.keywords) {
     $scope.global.pageTitle = '"' + $scope.global.keywords + '" - Columbia University Publications';
 
-    /* track page on Analytics */
-    ga('send', 'pageview', {
-      'page': $scope.global.path + '?q=' + $scope.global.keywords + '&type=publications',
-      'title': 'Publications - ' + $scope.global.keywords
-    });
   }
   else {
     $scope.global.pageTitle = "Columbia University Search Publications";
 
-    /* track page on Analytics */
-    ga('send', 'pageview', {
-      'page': $scope.global.path,
-      'title': 'Publications (all)'
-    });
   }
 
   $scope.global.initSearch();
@@ -1898,20 +1836,10 @@ gsaControllers.controller('events', ['$scope', '$routeParams', '$http', '$filter
   if ($scope.global.keywords) {
     $scope.global.pageTitle = '"' + $scope.global.keywords + '" - Columbia University Events';
 
-    /* track page on Analytics */
-    ga('send', 'pageview', {
-      'page': $scope.global.path + '?q=' + $scope.global.keywords + '&type=events',
-      'title': 'Events - ' + $scope.global.keywords
-    });
   }
   else {
     $scope.global.pageTitle = 'Columbia University Search Events';
 
-    /* track page on Analytics */
-    ga('send', 'pageview', {
-      'page': $scope.global.path,
-      'title': 'Events (all)'
-    });
   }
 
   $scope.global.initSearch();
